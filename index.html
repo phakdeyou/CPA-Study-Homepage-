@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAR Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="app-css">
+:root{--bg:#f6f3ee;--card:#fffdf9;--ink:#1f2430;--mut:#6b7080;--line:#e7e1d6;--acc:#2f5d50;--acc2:#e0a43a;--good:#2f8a5b;--warn:#c98a1b;--bad:#c4473a;--soft:#eef3f0;--r:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;font-weight:700}
+h2{font-size:20px;margin-bottom:12px}
+a{color:var(--acc)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 18px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.grid{display:grid;gap:16px}
+.hero{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px}
+.hero .main{background:linear-gradient(135deg,#2f5d50,#1f3f37);color:#fff;border:none;position:relative;overflow:hidden}
+.hero .main h1{font-size:30px}
+.hero .main .sub{opacity:.8;margin-top:4px}
+.count{display:flex;align-items:flex-end;gap:14px;margin-top:22px;flex-wrap:wrap}
+.count .big{font-family:Fraunces,serif;font-size:84px;line-height:.9;font-weight:700}
+.count .lbl{font-size:15px;opacity:.85;padding-bottom:8px}
+.datebox{margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;opacity:.95}
+.datebox input{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 8px;font:inherit;color-scheme:dark}
+.timebar{height:8px;background:rgba(255,255,255,.18);border-radius:9px;margin-top:16px;overflow:hidden}
+.timebar i{display:block;height:100%;background:var(--acc2);border-radius:9px}
+.ringcard{display:flex;gap:18px;align-items:center}
+.ring{width:130px;height:130px;flex:none}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.stat{padding:14px}
+.stat .v{font-family:Fraunces,serif;font-size:26px;font-weight:700}
+.stat .k{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.stat .s{font-size:12px;color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.lnk{display:flex;flex-direction:column;gap:2px;padding:12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:#fff;transition:.15s}
+.lnk:hover{border-color:var(--acc);transform:translateY(-1px)}
+.lnk b{font-size:14px}.lnk span{font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lnk .em{font-size:20px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+button,.btn{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:7px 12px;cursor:pointer}
+button.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
+button.ghost{background:transparent}
+button.danger{color:var(--bad)}
+input,select,textarea{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:9px;padding:7px 9px;background:#fff;color:var(--ink);width:100%}
+textarea{resize:vertical;min-height:70px}
+label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px;font-weight:600}
+.focus{background:var(--soft);border-radius:12px;padding:14px;margin-bottom:12px}
+.focus .t{font-weight:700;font-size:16px}
+.quote{font-family:Fraunces,serif;font-size:19px;line-height:1.35;margin:4px 0 12px}
+.why{white-space:pre-wrap;border-left:3px solid var(--acc2);padding:6px 12px;color:#3a3f4b;background:#fffaf0;border-radius:0 8px 8px 0;min-height:40px}
+.wins li{margin:3px 0}
+.area{margin-bottom:22px}
+.areahead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.areahead h3{font-size:17px}
+.pbar{height:7px;background:#ece6db;border-radius:9px;overflow:hidden;margin-bottom:10px}
+.pbar i{display:block;height:100%;background:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid #f0ebe2;vertical-align:middle}
+tr.t{cursor:pointer}tr.t:hover td{background:#faf6ef}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.st0{background:#eee;color:#666}.st1{background:#fdf0d8;color:#94640e}.st2{background:#e3eefa;color:#2c5d93}.st3{background:#dff1e6;color:#1f6b43}
+.sc{font-weight:700}.sc.g{color:var(--good)}.sc.w{color:var(--warn)}.sc.b{color:var(--bad)}
+.ic{font-size:13px;text-decoration:none;margin-right:6px}
+.chart{display:flex;align-items:flex-end;gap:5px;height:120px;padding-top:6px;border-bottom:1px solid var(--line)}
+.chart div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.chart i{display:block;width:100%;background:var(--acc);border-radius:4px 4px 0 0;min-height:2px}
+.chart i.today{background:var(--acc2)}
+.chart small{font-size:10px;color:var(--mut);margin-top:3px}
+.xl{display:flex;gap:5px}.xl small{flex:1;text-align:center;font-size:10px;color:var(--mut)}
+.logform{display:grid;grid-template-columns:1.1fr .7fr .7fr .7fr 1.6fr auto;gap:8px;align-items:end;margin-bottom:14px}
+.recent{font-size:13px;color:var(--mut);margin-top:10px}
+.recent div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed var(--line)}
+.overlay{position:fixed;inset:0;background:rgba(20,24,30,.45);display:flex;justify-content:flex-end;z-index:50}
+.drawer{width:min(460px,100%);height:100%;background:var(--card);padding:22px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.save{font-size:12px;color:var(--mut)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:13px;z-index:60}
+.muted{color:var(--mut);font-size:13px}
+.hidden{display:none!important}
+@media(max-width:900px){.hero,.two{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.logform{grid-template-columns:1fr 1fr}.logform .full{grid-column:1/-1}.hide-sm{display:none}}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}.count .big{font-size:64px}}
+</style>
+</head>
+<body>
+<template id="shell">
+<div class="wrap">
+  <div class="hero">
+    <div class="card main">
+      <div class="between"><div><h1>FAR Command Center</h1><div class="sub">Financial Accounting &amp; Reporting · UWorld + Becker</div></div><span class="save" id="saveState" style="color:#fff;opacity:.7"></span></div>
+      <div class="count"><div class="big" id="daysLeft">–</div><div class="lbl" id="daysLbl">days until exam</div></div>
+      <div class="timebar"><i id="timeFill"></i></div>
+      <div class="datebox">
+        <span>Started</span><input type="date" id="startDate">
+        <span>Exam day</span><input type="date" id="examDate">
+      </div>
+    </div>
+    <div class="card ringcard">
+      <svg class="ring" viewBox="0 0 120 120" id="ring"></svg>
+      <div>
+        <h3 style="font-size:18px">Overall progress</h3>
+        <div class="muted" id="ringTxt"></div>
+        <div style="margin-top:10px" id="paceTxt" class="muted"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="two">
+    <div class="card">
+      <div class="between"><h2>Quick launch</h2><button class="ghost" id="editLinks">Edit links</button></div>
+      <div class="links" id="links"></div>
+      <div id="linkEditor" class="hidden"></div>
+    </div>
+    <div class="card">
+      <h2>Today</h2>
+      <div class="focus"><div class="muted">Suggested focus</div><div class="t" id="focusT"></div><div class="muted" id="focusWhy"></div></div>
+      <div class="muted">Remember</div>
+      <div class="quote" id="quote"></div>
+      <div class="between"><div class="muted">My why</div><button class="ghost" id="editWhy">Edit</button></div>
+      <div class="why" id="why"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="between" style="margin-bottom:10px"><h2 style="margin:0">Log a study session</h2><span class="muted">Logging questions with a score updates that topic's UWorld stats automatically.</span></div>
+    <div class="logform">
+      <div><label>Date</label><input type="date" id="lgDate"></div>
+      <div><label>Hours</label><input type="number" step="0.25" min="0" id="lgH" placeholder="2"></div>
+      <div><label>UWorld Qs</label><input type="number" min="0" id="lgQ" placeholder="40"></div>
+      <div><label>Score %</label><input type="number" min="0" max="100" id="lgS" placeholder="72"></div>
+      <div class="full"><label>Topic</label><select id="lgT"></select></div>
+      <div class="full"><button class="pri" id="lgAdd" style="width:100%">Log it</button></div>
+    </div>
+    <div class="two" style="margin:0">
+      <div><div class="muted" style="margin-bottom:4px">Hours, last 14 days</div><div class="chart" id="chart"></div><div class="xl" id="chartX"></div></div>
+      <div><div class="muted">Recent sessions</div><div class="recent" id="recent"></div></div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="card"><div class="between"><h2>Wins &amp; milestones</h2></div>
+      <div class="row" style="margin-bottom:8px"><input id="winIn" placeholder="e.g. First 80% on a Leases set"><button id="winAdd">Add</button></div>
+      <ul class="wins" id="wins"></ul></div>
+    <div class="card"><h2>Weak spots</h2><div class="muted" style="margin-bottom:8px">Topics with 10+ questions answered and under 65%.</div><div id="weak"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="between" style="margin-bottom:14px"><h2 style="margin:0">Topics</h2>
+      <div class="row"><select id="filter" style="width:auto"><option value="all">All statuses</option><option value="0">Not started</option><option value="1">Learning</option><option value="2">Reviewing</option><option value="3">Done</option></select><button id="addTopic">+ Topic</button></div></div>
+    <div id="areas"></div>
+  </div>
+
+  <div class="row" style="margin-top:18px;justify-content:center">
+    <button class="ghost" id="exportBtn">Copy backup</button>
+    <button class="ghost" id="importBtn">Restore from backup</button>
+    <button class="ghost" id="settingsBtn">Goals</button>
+  </div>
+</div>
+</template>
+<div id="root"></div>
+<div id="modal"></div>
+<script id="state" type="application/json">null</script>
+<script id="app-js">
+(function(){
+const STATUS=["Not started","Learning","Reviewing","Done"];
+const AREAS=[
+ {id:"I",name:"Area I · Financial Reporting",w:"25–35%"},
+ {id:"II",name:"Area II · Select Balance Sheet Accounts",w:"30–40%"},
+ {id:"III",name:"Area III · Select Transactions",w:"25–35%"}];
+const QUOTES=[
+ "You don't need to feel ready. You need to keep showing up.",
+ "Every wrong UWorld answer today is one you won't miss on exam day.",
+ "Small sets, done daily, beat marathon weekends.",
+ "75 is the goal. Not perfection — passing.",
+ "Read the explanation even when you got it right.",
+ "The hardest topic on your list is the one worth 10 extra points.",
+ "Future CPA. Study like it's already true.",
+ "Progress is quiet. Keep stacking days.",
+ "Tired is fine. Zero is not. Do one set.",
+ "Lease math is just a pattern you haven't drilled enough yet."];
+const T=(a,n)=>({id:Math.random().toString(36).slice(2,9),area:a,name:n,status:0,q:0,pct:0,notion:"",videos:"",notes:""});
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function defaults(){return{
+ v:1,updatedAt:0,examDate:"2027-02-12",startDate:today(),qGoal:1500,hoursGoal:3,
+ why:"Click Edit and write why you're doing this — who you're doing it for, and what passing FAR unlocks.",
+ links:[
+  {e:"📓",label:"Notion notes",url:"https://www.notion.so/"},
+  {e:"🧠",label:"UWorld QBank",url:"https://www.uworld.com/"},
+  {e:"📘",label:"Becker",url:"https://www.becker.com/"},
+  {e:"▶️",label:"Farhat Lectures",url:"https://www.youtube.com/@FarhatLectures"},
+  {e:"▶️",label:"Edspira",url:"https://www.youtube.com/@Edspira"},
+  {e:"📋",label:"AICPA FAR blueprint",url:"https://www.aicpa-cima.com/resources/landing/cpa-exam-blueprints"}],
+ topics:[
+  T("I","Conceptual framework & standard setting"),T("I","Balance sheet & income statement"),T("I","Comprehensive income & equity statement"),T("I","Statement of cash flows"),T("I","Notes to financial statements"),T("I","Public company reporting (EPS, segments, interim)"),T("I","Financial statement ratios & analysis"),T("I","Special purpose frameworks"),T("I","Not-for-profit entities"),T("I","State & local governments"),
+  T("II","Cash & cash equivalents"),T("II","Trade receivables & credit losses"),T("II","Inventory"),T("II","Property, plant & equipment"),T("II","Investments (debt, equity, equity method)"),T("II","Intangible assets & goodwill"),T("II","Payables & accrued liabilities"),T("II","Long-term debt & bonds"),T("II","Equity"),
+  T("III","Accounting changes & error corrections"),T("III","Asset retirement obligations"),T("III","Contingencies & commitments"),T("III","Revenue recognition (ASC 606)"),T("III","Income taxes (deferred)"),T("III","Leases"),T("III","Fair value measurements"),T("III","Foreign currency transactions"),T("III","Nonreciprocal transfers"),T("III","R&D and software costs"),T("III","Subsequent events & going concern")],
+ log:[],wins:[]}}
+
+// ---------- state & persistence ----------
+let S=null,artifact=null,saveTimer=null,editingLinks=false;
+try{S=JSON.parse(document.getElementById("state").textContent)}catch(e){}
+if(!S)S=defaults();
+try{const l=JSON.parse(localStorage.getItem("farhub")||"null");if(l&&l.updatedAt>(S.updatedAt||0))S=l}catch(e){}
+const css=document.getElementById("app-css").textContent,js=document.getElementById("app-js").textContent,shell=document.getElementById("shell").innerHTML;
+function buildDoc(s){
+ const data=JSON.stringify(s).replace(/</g,"\\u003c");
+ return '<!DOCTYPE html>\n<html lang="en"><head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>FAR Command Center</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style id="app-css">'+css+'</style>\n</head>\n<body>\n<template id="shell">'+shell+'</template>\n<div id="root"></div>\n<div id="modal"></div>\n<script id="state" type="application/json">'+data+'<\/script>\n<script id="app-js">'+js+'<\/script>\n</body></html>';
+}
+function setSave(t){const e=document.getElementById("saveState");if(e)e.textContent=t}
+function save(){
+ S.updatedAt=Date.now();
+ try{localStorage.setItem("farhub",JSON.stringify(S))}catch(e){}
+ setSave(artifact?"Saving…":"Saved in this browser");
+ clearTimeout(saveTimer);
+ if(artifact)saveTimer=setTimeout(async()=>{
+   try{await artifact.publish(buildDoc(S));setSave("Saved")}catch(e){setSave(e&&/not_(granted|writer)/.test(String(e.code||e.message))?"Read-only view":"Saved in this browser")}
+ },1800);
+}
+function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:(u?"https://"+u:"#");
+const dd=(a,b)=>Math.round((new Date(b+"T00:00")-new Date(a+"T00:00"))/864e5);
+const scCls=p=>p>=75?"g":p>=60?"w":"b";
+
+// ---------- metrics ----------
+function metrics(){
+ const t=S.topics,tq=t.reduce((a,x)=>a+(+x.q||0),0);
+ const avg=tq?t.reduce((a,x)=>a+(+x.q||0)*(+x.pct||0),0)/tq:0;
+ const done=t.filter(x=>x.status==3).length;
+ const statusPts=t.reduce((a,x)=>a+[0,.33,.7,1][x.status],0)/(t.length||1);
+ const qPct=Math.min(1,tq/(S.qGoal||1));
+ const overall=Math.round((statusPts*.6+qPct*.4)*100);
+ const left=S.examDate?dd(today(),S.examDate):null;
+ const total=S.examDate&&S.startDate?dd(S.startDate,S.examDate):null;
+ const byDay={};S.log.forEach(l=>{byDay[l.d]=(byDay[l.d]||0)+(+l.h||0)+((+l.q||0)>0?0.0001:0)});
+ let streak=0,d=new Date();if(!byDay[today()])d.setDate(d.getDate()-1);
+ for(;;){const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");if(byDay[k]){streak++;d.setDate(d.getDate()-1)}else break}
+ const wk=S.log.filter(l=>{const x=dd(l.d,today());return x>=0&&x<7}).reduce((a,l)=>a+(+l.h||0),0);
+ const totH=S.log.reduce((a,l)=>a+(+l.h||0),0);
+ return{tq,avg,done,overall,left,total,streak,wk,totH,byDay};
+}
+
+// ---------- render ----------
+function render(){
+ const m=metrics();
+ $("examDate").value=S.examDate||"";$("startDate").value=S.startDate||"";
+ if(m.left==null){$("daysLeft").textContent="–";$("daysLbl").textContent="set your exam date"}
+ else if(m.left>=0){$("daysLeft").textContent=m.left;$("daysLbl").innerHTML=(m.left==1?"day":"days")+" until exam<br><span style='font-size:13px'>≈ "+(m.left/7).toFixed(1)+" weeks</span>"}
+ else{$("daysLeft").textContent="✓";$("daysLbl").textContent="exam date passed — update it if you rescheduled"}
+ const used=m.total>0?Math.min(100,Math.max(0,(1-m.left/m.total)*100)):0;$("timeFill").style.width=used+"%";
+ // ring
+ const C=2*Math.PI*50,o=m.overall;
+ $("ring").innerHTML='<circle cx="60" cy="60" r="50" fill="none" stroke="#ece6db" stroke-width="11"/><circle cx="60" cy="60" r="50" fill="none" stroke="#2f5d50" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+(C*o/100)+' '+C+'" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" font-family="Fraunces,serif" font-size="28" font-weight="700" fill="#1f2430">'+o+'%</text><text x="60" y="76" text-anchor="middle" font-size="10" fill="#6b7080">ready</text>';
+ $("ringTxt").textContent=m.done+" of "+S.topics.length+" topics done · "+m.tq+" of "+S.qGoal+" UWorld Qs";
+ const qLeft=Math.max(0,S.qGoal-m.tq),tLeft=S.topics.length-m.done;
+ $("paceTxt").innerHTML=m.left>0?"To finish on time: <b>"+Math.ceil(qLeft/m.left)+" Qs/day</b> and <b>"+(tLeft/(m.left/7)).toFixed(1)+" topics/week</b>.":"";
+ // stats
+ const st=[["Days left",m.left??"–",S.examDate?new Date(S.examDate+"T00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):""],
+  ["Topics done",m.done+"/"+S.topics.length,Math.round(m.done/(S.topics.length||1)*100)+"%"],
+  ["UWorld Qs",m.tq,"goal "+S.qGoal],
+  ["Avg score",m.tq?Math.round(m.avg)+"%":"–","aim for 75%+"],
+  ["Streak",m.streak+" 🔥",m.streak==1?"day":"days"],
+  ["This week",m.wk.toFixed(1)+"h","goal "+(S.hoursGoal*7)+"h · "+m.totH.toFixed(0)+"h total"]];
+ $("stats").innerHTML=st.map(s=>'<div class="card stat"><div class="k">'+s[0]+'</div><div class="v">'+esc(s[1])+'</div><div class="s">'+esc(s[2])+'</div></div>').join("");
+ renderLinks();
+ // focus
+ const f=pickFocus();$("focusT").textContent=f.t;$("focusWhy").textContent=f.why;
+ const qi=Math.floor(Date.now()/864e5)%QUOTES.length;$("quote").textContent="“"+QUOTES[qi]+"”";
+ $("why").textContent=S.why;
+ // log
+ $("lgT").innerHTML='<option value="">— No topic —</option>'+AREAS.map(a=>'<optgroup label="'+a.name+'">'+S.topics.filter(t=>t.area==a.id).map(t=>'<option value="'+t.id+'">'+esc(t.name)+'</option>').join("")+'</optgroup>').join("");
+ if(!$("lgDate").value)$("lgDate").value=today();
+ renderChart(m);
+ $("recent").innerHTML=S.log.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,6).map((l,i)=>{const tp=S.topics.find(t=>t.id==l.t);return'<div><span>'+l.d.slice(5)+' · '+esc(tp?tp.name:"General")+'</span><span>'+(l.h?l.h+"h ":"")+(l.q?l.q+" Qs":"")+(l.s!=null&&l.s!==""?" @ "+l.s+"%":"")+' <a href="#" data-dellog="'+l.id+'" title="Delete" style="color:var(--mut);text-decoration:none">×</a></span></div>'}).join("")||"<div>No sessions yet — log your first one above.</div>";
+ // wins
+ $("wins").innerHTML=S.wins.map((w,i)=>'<li>'+esc(w.t)+' <span class="muted">'+w.d.slice(5)+'</span> <a href="#" data-delwin="'+i+'" style="color:var(--mut);text-decoration:none">×</a></li>').join("")||'<li class="muted" style="list-style:none">Your wins go here. Every finished topic counts.</li>';
+ const weak=S.topics.filter(t=>t.q>=10&&t.pct<65).sort((a,b)=>a.pct-b.pct);
+ $("weak").innerHTML=weak.length?weak.map(t=>'<div class="between" style="padding:5px 0;border-bottom:1px dashed var(--line)"><a href="#" data-topic="'+t.id+'" style="text-decoration:none;color:var(--ink)">'+esc(t.name)+'</a><span class="sc b">'+Math.round(t.pct)+'%</span></div>').join(""):'<div class="muted">Nothing flagged yet. 👍</div>';
+ renderTopics();
+}
+function pickFocus(){
+ const t=S.topics;
+ const weak=t.filter(x=>x.q>=10&&x.pct<65).sort((a,b)=>a.pct-b.pct)[0];
+ if(weak)return{t:weak.name,why:"Your lowest UWorld score ("+Math.round(weak.pct)+"%). Re-read the Becker section, then do a fresh set of 20."};
+ const lrn=t.find(x=>x.status==1);if(lrn)return{t:lrn.name,why:"You're mid-way through this one. Finish the content and start questions."};
+ const rev=t.filter(x=>x.status==2).sort((a,b)=>a.q-b.q)[0];
+ const ns=t.find(x=>x.status==0);if(ns)return{t:ns.name,why:"Next up on your list. Watch a lecture, skim Becker, then do 15–20 Qs."};
+ if(rev)return{t:rev.name,why:"Reviewing — keep drilling questions until you're consistently 75%+."};
+ return{t:"Mixed practice",why:"Everything's done. Run mixed UWorld sets and timed sims."};
+}
+function renderLinks(){
+ $("links").innerHTML=S.links.map(l=>'<a class="lnk" href="'+esc(safeUrl(l.url))+'" target="_blank" rel="noopener"><span class="em">'+esc(l.e||"🔗")+'</span><b>'+esc(l.label)+'</b><span>'+esc((l.url||"").replace(/^https?:\/\/(www\.)?/,""))+'</span></a>').join("");
+ const ed=$("linkEditor");ed.classList.toggle("hidden",!editingLinks);$("links").classList.toggle("hidden",editingLinks);
+ $("editLinks").textContent=editingLinks?"Done":"Edit links";
+ if(editingLinks)ed.innerHTML=S.links.map((l,i)=>'<div class="row" style="margin-bottom:6px;flex-wrap:nowrap"><input style="width:52px" data-li="'+i+'" data-k="e" value="'+esc(l.e)+'"><input style="flex:1" data-li="'+i+'" data-k="label" value="'+esc(l.label)+'" placeholder="Label"><input style="flex:2" data-li="'+i+'" data-k="url" value="'+esc(l.url)+'" placeholder="https://"><button class="danger" data-dellink="'+i+'">×</button></div>').join("")+'<button id="addLink">+ Add link</button>';
+}
+function renderChart(m){
+ const days=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))}
+ const hrs=days.map(d=>S.log.filter(l=>l.d==d).reduce((a,l)=>a+(+l.h||0),0));
+ const mx=Math.max(S.hoursGoal||1,...hrs);
+ $("chart").innerHTML=hrs.map((h,i)=>'<div title="'+days[i]+': '+h+'h"><small>'+(h?h:"")+'</small><i class="'+(i==13?"today":"")+'" style="height:'+(h/mx*85)+'%"></i></div>').join("");
+ $("chartX").innerHTML=days.map(d=>'<small>'+["S","M","T","W","T","F","S"][new Date(d+"T00:00").getDay()]+'</small>').join("");
+}
+function renderTopics(){
+ const f=$("filter").value;
+ $("areas").innerHTML=AREAS.map(a=>{
+  const all=S.topics.filter(t=>t.area==a.id),ts=all.filter(t=>f=="all"||t.status==f);
+  const prog=all.length?all.reduce((s,x)=>s+[0,.33,.7,1][x.status],0)/all.length*100:0;
+  const aq=all.reduce((s,x)=>s+(+x.q||0),0),ap=aq?all.reduce((s,x)=>s+x.q*x.pct,0)/aq:0;
+  return'<div class="area"><div class="areahead"><h3>'+a.name+'</h3><span class="muted">Exam weight '+a.w+' · '+all.filter(x=>x.status==3).length+'/'+all.length+' done · '+aq+' Qs'+(aq?' · <span class="sc '+scCls(ap)+'">'+Math.round(ap)+'%</span>':'')+'</span></div><div class="pbar"><i style="width:'+prog+'%"></i></div>'+
+  (ts.length?'<table><tr><th>Topic</th><th>Status</th><th>Qs</th><th>Score</th><th class="hide-sm">Resources</th></tr>'+ts.map(t=>'<tr class="t" data-topic="'+t.id+'"><td>'+esc(t.name)+'</td><td><span class="pill st'+t.status+'">'+STATUS[t.status]+'</span></td><td>'+(t.q||"–")+'</td><td>'+(t.q?'<span class="sc '+scCls(t.pct)+'">'+Math.round(t.pct)+'%</span>':'–')+'</td><td class="hide-sm">'+(t.notion?'<a class="ic" href="'+esc(safeUrl(t.notion))+'" target="_blank" rel="noopener">📓 Notes</a>':'')+(t.videos||"").split(/\n/).filter(Boolean).map((v,i)=>'<a class="ic" href="'+esc(safeUrl(v.trim()))+'" target="_blank" rel="noopener">▶️'+(i?i+1:"")+'</a>').join("")+'</td></tr>').join("")+'</table>':'<div class="muted">No topics match this filter.</div>')+'</div>'}).join("");
+}
+
+// ---------- modals ----------
+function openTopic(id){
+ const isNew=!id;const t=isNew?T("I",""):S.topics.find(x=>x.id==id);if(!t)return;
+ $("modal").innerHTML='<div class="overlay" id="ov"><div class="drawer">'+
+ '<div class="between"><h2 style="margin:0">'+(isNew?"New topic":"Edit topic")+'</h2><button class="ghost" id="dClose">✕</button></div>'+
+ '<div><label>Topic name</label><input id="dName" value="'+esc(t.name)+'"></div>'+
+ '<div class="f2"><div><label>Area</label><select id="dArea">'+AREAS.map(a=>'<option value="'+a.id+'"'+(a.id==t.area?" selected":"")+'>'+a.name.split(" · ")[0]+'</option>').join("")+'</select></div><div><label>Status</label><select id="dStatus">'+STATUS.map((s,i)=>'<option value="'+i+'"'+(i==t.status?" selected":"")+'>'+s+'</option>').join("")+'</select></div></div>'+
+ '<div class="f2"><div><label>UWorld Qs done</label><input type="number" min="0" id="dQ" value="'+(t.q||0)+'"></div><div><label>% correct</label><input type="number" min="0" max="100" id="dP" value="'+(Math.round(t.pct)||0)+'"></div></div>'+
+ '<div><label>Notion page link</label><input id="dNotion" value="'+esc(t.notion)+'" placeholder="https://www.notion.so/…"></div>'+
+ (t.notion?'<a href="'+esc(safeUrl(t.notion))+'" target="_blank" rel="noopener" class="muted">Open Notion notes ↗</a>':'')+
+ '<div><label>Video / lecture links (one per line)</label><textarea id="dVid" placeholder="https://www.youtube.com/watch?v=…">'+esc(t.videos)+'</textarea></div>'+
+ '<div><label>Quick notes (traps, formulas, reminders)</label><textarea id="dNotes" style="min-height:120px">'+esc(t.notes)+'</textarea></div>'+
+ '<div class="row"><button class="pri" id="dSave">Save</button>'+(isNew?'':'<button class="danger" id="dDel">Delete topic</button>')+'</div></div></div>';
+ const close=()=>$("modal").innerHTML="";
+ $("ov").onclick=e=>{if(e.target.id=="ov")close()};$("dClose").onclick=close;
+ $("dSave").onclick=()=>{
+  const name=$("dName").value.trim();if(!name){$("dName").focus();return}
+  const prev=t.status;
+  Object.assign(t,{name,area:$("dArea").value,status:+$("dStatus").value,q:Math.max(0,+$("dQ").value||0),pct:Math.min(100,Math.max(0,+$("dP").value||0)),notion:$("dNotion").value.trim(),videos:$("dVid").value.trim(),notes:$("dNotes").value});
+  if(isNew)S.topics.push(t);
+  if(t.status==3&&prev!=3){S.wins.unshift({t:"Finished "+t.name,d:today()});toast("Topic done. Nice work! 🎉")}
+  close();save();render()};
+ if(!isNew)$("dDel").onclick=()=>{const b=$("dDel");if(b.dataset.c){S.topics=S.topics.filter(x=>x.id!=t.id);close();save();render()}else{b.dataset.c=1;b.textContent="Click again to delete"}};
+}
+function openText(title,val,hint,onSave,ro){
+ $("modal").innerHTML='<div class="overlay" id="ov"><div class="drawer"><div class="between"><h2 style="margin:0">'+title+'</h2><button class="ghost" id="dClose">✕</button></div><div class="muted">'+hint+'</div><textarea id="tx" style="min-height:260px">'+esc(val)+'</textarea><div class="row">'+(ro?'<button class="pri" id="txCopy">Copy</button>':'<button class="pri" id="txSave">Save</button>')+'</div></div></div>';
+ const close=()=>$("modal").innerHTML="";$("ov").onclick=e=>{if(e.target.id=="ov")close()};$("dClose").onclick=close;
+ if(ro)$("txCopy").onclick=async()=>{try{await navigator.clipboard.writeText($("tx").value);toast("Copied")}catch(e){$("tx").select();toast("Select all & copy manually")}};
+ else $("txSave").onclick=()=>{if(onSave($("tx").value)!==false)close()};
+}
+function openGoals(){
+ $("modal").innerHTML='<div class="overlay" id="ov"><div class="drawer"><div class="between"><h2 style="margin:0">Goals</h2><button class="ghost" id="dClose">✕</button></div>'+
+ '<div><label>Total UWorld questions to complete</label><input type="number" id="gQ" value="'+S.qGoal+'"><div class="muted">Set this to the number of FAR questions in your QBank (or how many you plan to do).</div></div>'+
+ '<div><label>Daily study hours goal</label><input type="number" step="0.5" id="gH" value="'+S.hoursGoal+'"></div>'+
+ '<div class="row"><button class="pri" id="gSave">Save</button><button class="danger" id="gReset">Reset everything</button></div></div></div>';
+ const close=()=>$("modal").innerHTML="";$("ov").onclick=e=>{if(e.target.id=="ov")close()};$("dClose").onclick=close;
+ $("gSave").onclick=()=>{S.qGoal=Math.max(1,+$("gQ").value||1);S.hoursGoal=Math.max(.5,+$("gH").value||1);close();save();render()};
+ $("gReset").onclick=()=>{const b=$("gReset");if(b.dataset.c){S=defaults();close();save();render()}else{b.dataset.c=1;b.textContent="Click again — this wipes all progress"}};
+}
+
+// ---------- events ----------
+function bind(){
+ document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-topic],[data-dellog],[data-delwin],[data-dellink],#addLink");if(!el)return;
+  if(el.dataset.topic){e.preventDefault();openTopic(el.dataset.topic)}
+  else if(el.dataset.dellog){e.preventDefault();S.log=S.log.filter(l=>l.id!=el.dataset.dellog);save();render()}
+  else if(el.dataset.delwin!=null){e.preventDefault();S.wins.splice(+el.dataset.delwin,1);save();render()}
+  else if(el.dataset.dellink!=null){S.links.splice(+el.dataset.dellink,1);save();renderLinks()}
+  else if(el.id=="addLink"){S.links.push({e:"🔗",label:"New link",url:""});save();renderLinks()}
+ });
+ document.addEventListener("change",e=>{const el=e.target;if(el.dataset.li!=null){S.links[+el.dataset.li][el.dataset.k]=el.value.trim();save()}});
+ $("editLinks").onclick=()=>{editingLinks=!editingLinks;renderLinks()};
+ $("examDate").onchange=e=>{S.examDate=e.target.value;save();render()};
+ $("startDate").onchange=e=>{S.startDate=e.target.value;save();render()};
+ $("filter").onchange=renderTopics;
+ $("addTopic").onclick=()=>openTopic(null);
+ $("editWhy").onclick=()=>openText("My why",S.why,"Write what you'll read on the days you don't feel like studying.",v=>{S.why=v.trim()||defaults().why;save();render()});
+ $("winAdd").onclick=()=>{const v=$("winIn").value.trim();if(!v)return;S.wins.unshift({t:v,d:today()});$("winIn").value="";save();render()};
+ $("winIn").onkeydown=e=>{if(e.key=="Enter")$("winAdd").click()};
+ $("lgAdd").onclick=()=>{
+  const h=+$("lgH").value||0,q=Math.round(+$("lgQ").value||0),sRaw=$("lgS").value,s=sRaw===""?null:Math.min(100,Math.max(0,+sRaw)),tid=$("lgT").value,d=$("lgDate").value||today();
+  if(!h&&!q){toast("Add hours or questions");return}
+  if(q&&tid){const t=S.topics.find(x=>x.id==tid);if(t){if(s!=null){t.pct=(t.pct*t.q+s*q)/(t.q+q)}t.q+=q;if(t.status==0)t.status=1}}
+  S.log.push({id:Math.random().toString(36).slice(2,9),d,h,q,s,t:tid});
+  ["lgH","lgQ","lgS"].forEach(i=>$(i).value="");
+  const m=metrics();save();render();
+  toast(m.streak>1?m.streak+"-day streak. Keep it going 🔥":"Logged. Good work today.");
+ };
+ $("exportBtn").onclick=()=>openText("Backup",JSON.stringify(S),"Copy this and keep it somewhere safe (e.g. a Notion page).",null,true);
+ $("importBtn").onclick=()=>openText("Restore from backup","","Paste a backup you copied earlier. This replaces your current data.",v=>{try{const o=JSON.parse(v);if(!o||!Array.isArray(o.topics))throw 0;S=o;save();render();toast("Restored");}catch(e){toast("That doesn't look like a valid backup");return false}});
+ $("settingsBtn").onclick=openGoals;
+}
+
+$("root").innerHTML=shell;bind();render();
+setSave("");
+try{window.claude&&window.claude.use&&window.claude.use("artifact").then(a=>{artifact=a;setSave(a?"Synced to this page":"Saved in this browser")}).catch(()=>setSave("Saved in this browser"))}catch(e){setSave("Saved in this browser")}
+})();
+</script>
+</body></html>
